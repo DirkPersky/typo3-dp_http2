@@ -15,8 +15,8 @@ You like this extension? Get something for me (surprise!) from my wishlist on [A
 
 ### Contact us
 - [E-Mail](mailto:info@dp-dvelop.de)
-- [GitHub](https://github.com/DirkPersky/typo3-dp_cookieconsent)
+- [GitHub](https://github.com/DirkPersky/typo3-dp_http2)
 - [Homepage](http:/dp-dvelop.de)
-- [TYPO3.org](https://extensions.typo3.org/extension/dp_cookieconsent/)
-- [Packagist.org (composer)](https://packagist.org/packages/dirkpersky/typo3-dp_cookieconsent)
-- [NPM - Version](https://github.com/DirkPersky/npm-dp_cookieconsent)
+- [TYPO3.org](https://extensions.typo3.org/extension/dp_http2/)
+- [Packagist.org (composer)](https://packagist.org/packages/dirkpersky/typo3-dp_http2)
+- [NPM - Version](https://github.com/DirkPersky/npm-dp_http2)
