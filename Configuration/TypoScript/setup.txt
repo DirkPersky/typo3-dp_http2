@@ -1,0 +1,8 @@
+# ==============================================
+# FE-Plugin configuration for EXT:dp_http2
+# ==============================================
+plugin.dp_http2 {
+    settings {
+        enabled = {$plugin.tx_dp_http2.settings.enabled}
+    }
+}

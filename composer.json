@@ -1,0 +1,50 @@
+{
+  "name": "dirkpersky/typo3-dp_http2",
+  "type": "typo3-cms-extension",
+  "description": "This Plugin add HTTP2 Push header for preloads, scripts and css files",
+  "keywords": [
+    "TYPO3",
+    "scriptmerger",
+    "HTTP2"
+  ],
+  "homepage": "https://github.com/DirkPersky/typo3-dp_http2",
+  "support": {
+    "issues": "https://github.com/DirkPersky/typo3-dp_http2/issues"
+  },
+  "authors": [
+    {
+      "name": "Dirk Persky",
+      "role": "Developer",
+      "homepage": "http://dp-wired.de"
+    }
+  ],
+  "license": [
+    "AGPL-3.0-or-later"
+  ],
+  "require": {
+    "typo3/cms-core": "~9.5.0||~10.4.0||dev-master",
+    "sgalinski/scriptmerger": "~7.0.3||dev-master"
+  },
+  "replace": {
+    "typo3-ter/dp_cookieconsent": "self.version"
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin"
+  },
+  "autoload": {
+    "psr-4": {
+      "DirkPersky\\DpHttp2\\": "Classes/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "dp_http2",
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  },
+  "scripts": {
+    "zip": "grep -Po \"(?<='version' => ')([0-9]+.[0-9]+.[0-9]+)\" ext_emconf.php | xargs -I {version} sh -c 'git archive -v -o \"dp_http2_version.zip\" version'"
+  }
+}

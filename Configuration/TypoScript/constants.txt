@@ -1,0 +1,6 @@
+plugin.tx_dp_http2 {
+    settings {
+        # cat=plugin.http2; type=options[true,false]; label = Enable HTTP2 Push
+        enabled = true
+    }
+}
