@@ -80,7 +80,11 @@ class ContentPostProcessor
         // skip the processing if the current request contains INT scripts and has therefore uncached
         if ($GLOBALS['TSFE']->isINTincScript()) return;
         // site config
-        $siteKey = $typoScriptFrontendController->getSite()->getIdentifier();
+        if (method_exists($typoScriptFrontendController, 'getSite')) {
+            $siteKey = $typoScriptFrontendController->getSite()->getIdentifier();
+        } else {
+            $siteKey = $GLOBALS['TYPO3_REQUEST']->getAttribute('site')->getIdentifier();
+        }
         // paceholder values
         $maxFiles = null;
         $modus = null;
