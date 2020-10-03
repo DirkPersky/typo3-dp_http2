@@ -1,19 +1,21 @@
 <?php
-/**
+/*
  * Copyright (c) 2020.
  *
  * @category   TYPO3
  *
- * @copyright  2020 Dirk Persky
- * @author     Dirk Persky <info@dp-dvelop.de>
+ * @copyright  2020 Dirk Persky (https://github.com/DirkPersky)
+ * @author     Dirk Persky <dirk.persky@gmail.com>
  * @license    MIT
  */
+
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3_MODE') or die();
 
 $boot = function () {
     // Register FE namespace
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    ExtensionUtility::configurePlugin(
         'DirkPersky.' . 'dp_http2',
         'DpHttp2',
         []
