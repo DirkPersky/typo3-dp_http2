@@ -11,7 +11,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'HTTP2 Push',
-    'description' => 'This Plugin add HTTP2 Push header for preloads, scripts and css files',
+    'description' => 'This Plugin add HTTP2 Push header or preloads, scripts and css files',
     'category' => 'fe',
     'state' => 'beta',
     'uploadfolder' => 0,

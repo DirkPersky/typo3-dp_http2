@@ -1,7 +1,7 @@
 {
   "name": "dirkpersky/typo3-dp_http2",
   "type": "typo3-cms-extension",
-  "description": "This Plugin add HTTP2 Push header for preloads, scripts and css files",
+  "description": "This Plugin add HTTP2 Push header or preloads, scripts and css files",
   "keywords": [
     "TYPO3",
     "scriptmerger",
