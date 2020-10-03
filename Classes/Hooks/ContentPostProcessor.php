@@ -89,32 +89,44 @@ class ContentPostProcessor
         if ($this->isEnabled()) {
             $modus = $this->getConfig('plugin.dp_http2.settings.modus');
             $maxFiles = $this->getConfig('plugin.dp_http2.settings.maxFiles');
-            // parse HTML for Preloads
-            $preloads = ResourceParser::preloads($typoScriptFrontendController->content);
+            // get Preloads from DOM
+//            $preloads = ResourceParser::preloads($typoScriptFrontendController->content);
             // get Stylesheats from DOM
             $styles = ResourceParser::stylesheat($typoScriptFrontendController->content);
             // get JS from DOM
             $js = ResourceParser::javascript($typoScriptFrontendController->content);
             // dataset
-            $dataSet = array_merge($styles, $js, $preloads);
+            $dataSet = array_merge($styles, $js);
             // create Json temp File
-            $jsonString = json_encode(['maxFiles' => (empty($maxFiles) ? null : (int)$maxFiles), 'type' => $modus, 'dataset' => $dataSet]);
-            // write to content
+            $jsonString = json_encode(['maxFiles' => (empty($maxFiles) ? null : (int)$maxFiles), 'modus' => $modus, 'dataset' => $dataSet]);
+            // create backupfile
+            $this->writeFile($siteKey, $jsonString);
+        } else {
+            // check if cache file exist
+            $content = $this->getFile($siteKey);
+            // if content exists
+            if (!empty($content)) {
+                // path to values
+                $dataSet = $content['dataset'];
+                $maxFiles = $content['maxFiles'];
+                $modus = $content['modus'];
+            }
+        }
+        // if dataset eixst go one
+        if (!empty($dataSet)) {
+            // preload Header
             if ($modus == static::PRELOAD_MODE) {
                 // get Preload tags
                 $preloadContent = GeneralUtility::makeInstance(ResponsePreload::class)->preloadAll($dataSet, $maxFiles);
+                // add preload header tags
+                $typoScriptFrontendController->content = preg_replace(
+                    '/<\/title>/', '</title>' . $preloadContent, $typoScriptFrontendController->content, 1
+                );
             }
-            // create backupfile
-            if ($modus == static::PUSH_MODE) $this->writeFile($siteKey, $jsonString);
-        } else {
-            // check if is cache file exist
-            $content = $this->getFile($siteKey);
-            // path to values
-            $dataSet = $content['dataset'];
-            $maxFiles = $content['maxFiles'];
+            // push header
+            if ($modus == static::PUSH_MODE) GeneralUtility::makeInstance(ResponsePusher::class)->pushAll($dataSet, $maxFiles);
         }
-        // push header
-        if ($modus == static::PUSH_MODE && !empty($dataSet)) GeneralUtility::makeInstance(ResponsePusher::class)->pushAll($dataSet, $maxFiles);
+
     }
 
     /**
@@ -181,6 +193,10 @@ class ContentPostProcessor
         return $result;
     }
 
+    /**
+     * @param $file
+     * @return mixed
+     */
     protected function getFile($file)
     {
         $filepath = $this->tempDir . $file . '.json';

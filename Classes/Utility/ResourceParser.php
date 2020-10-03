@@ -33,7 +33,7 @@ class ResourceParser
      */
     public static function stylesheat($content)
     {
-        return static::parse('/<link[\/\s\w\-="]*href="(.*?\.css)"/i', $content, 'style');
+       return static::parse('/<link[\/\s\w\-="]*href="(.*?\.css)"(.*?)>/i', $content, 'style');
     }
 
     /**
@@ -42,7 +42,7 @@ class ResourceParser
      */
     public static function javascript($content)
     {
-        return static::parse('/<script[\/\s\w\-="]*src="(.*?\.js)"/i', $content, 'script');
+        return static::parse('/<script[\/\s\w\-="]*src="(.*?\.js)"(.*?)>/i', $content, 'script');
     }
 
     /**
@@ -64,10 +64,20 @@ class ResourceParser
                 if ($mimetype == null) $mimetype = static::getMime($matches[1][$key]);
                 // if type exist add
                 if ($mimetype) {
+                    // parse aditional options for preloading
+                    preg_match_all('/(integrity|crossorigin)="(.*?)"/i', $match, $temp);
+                    $attributes = [];
+                    // if results exist build set
+                    if (!empty($temp)) {
+                        foreach ($temp as $index => $var) {
+                            if (!empty($temp[1][$index])) $attributes[$temp[1][$index]] = $temp[2][$index];
+                        }
+                    }
                     // add to values
                     $result[] = [
                         'as' => $mimetype,
-                        'link' => $matches[1][$key]
+                        'link' => $matches[1][$key],
+                        'attributes' => $attributes
                     ];
                 }
 
