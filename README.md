@@ -8,21 +8,10 @@ This Plugin add HTTP2 Push header or preloads links for your performance optimiz
 If you use it together with Scriptmerger take care to install this plugin after Scriptmerger.
 
 ## Config
-### Constants
-```
-plugin.tx_dp_http2 {
-    settings {
-        # cat=plugin.http2; type=options[true,false]; label = Enable HTTP2 Push
-        enabled = true
+### TS-Constants
 
-        # cat=plugin.http2; type=int+; label= Maximum Files that shoud pushed
-        maxFiles =
+**plugin.tx_dp_http2.settings.**
 
-        # cat=plugin.http2; type=options[http2push,preload]; label = Push Modus
-        modus = http2push
-    }
-}
-```
 | Property                  | Description                                   | Options                                   | Default |
 | ------------------------- | --------------------------------------------- | ----------------------------------------- | -------:|
 | enabled                   | Enable the PlugIn handling                    | true|false                                | true |
