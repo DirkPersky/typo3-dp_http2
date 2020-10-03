@@ -1,6 +1,6 @@
 <?php
 
-namespace DirkPersky\HTTP2\Utility;
+namespace DirkPersky\DpHttp2\Utility;
 
 class RespsonsePusher {
 
