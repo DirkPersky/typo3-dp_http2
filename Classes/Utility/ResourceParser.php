@@ -1,33 +1,69 @@
 <?php
+/*
+ * Copyright (c) 2020.
+ *
+ * @category   TYPO3
+ *
+ * @copyright  2020 Dirk Persky (https://github.com/DirkPersky)
+ * @author     Dirk Persky <dirk.persky@gmail.com>
+ * @license    MIT
+ */
 
 namespace DirkPersky\DpHttp2\Utility;
 
-class ResourceParser {
+/**
+ * Class ResourceParser
+ * @package DirkPersky\DpHttp2\Utility
+ */
+class ResourceParser
+{
 
-    public static function preloads($content){
+    /**
+     * @param $content
+     * @return array
+     */
+    public static function preloads($content)
+    {
         return static::parse('/<link[\/\s\w\-="]*rel="preload"[\/\s\w\-="]*\shref="(.*?)"/i', $content);
     }
 
-    public static function stylesheat($content){
+    /**
+     * @param $content
+     * @return array
+     */
+    public static function stylesheat($content)
+    {
         return static::parse('/<link[\/\s\w\-="]*href="(.*?\.css)"/i', $content, 'style');
     }
 
-    public static function javascript($content){
+    /**
+     * @param $content
+     * @return array
+     */
+    public static function javascript($content)
+    {
         return static::parse('/<script[\/\s\w\-="]*src="(.*?\.js)"/i', $content, 'script');
     }
 
-    protected static function parse($regex, $content, $type = null){
+    /**
+     * @param $regex
+     * @param $content
+     * @param null $type
+     * @return array
+     */
+    protected static function parse($regex, $content, $type = null)
+    {
         // parse
         preg_match_all($regex, $content, $matches);
         // holder
         $result = [];
-        if(!empty($matches)){
-            foreach ($matches[0] as $key => $match){
+        if (!empty($matches)) {
+            foreach ($matches[0] as $key => $match) {
                 $mimetype = $type;
                 // if is null search for type
-                if($mimetype == null) $mimetype = static::getMime($matches[1][$key]);
+                if ($mimetype == null) $mimetype = static::getMime($matches[1][$key]);
                 // if type exist add
-                if($mimetype){
+                if ($mimetype) {
                     // add to values
                     $result[] = [
                         'as' => $mimetype,
@@ -41,7 +77,12 @@ class ResourceParser {
         return $result;
     }
 
-    protected static function getMime($file){
+    /**
+     * @param $file
+     * @return string
+     */
+    protected static function getMime($file)
+    {
         $file = parse_url($file, PHP_URL_PATH);
         $data = pathinfo($file);
         switch ($data['extension']) {

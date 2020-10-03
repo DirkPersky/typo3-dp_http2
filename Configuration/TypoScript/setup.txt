@@ -4,5 +4,7 @@
 plugin.dp_http2 {
     settings {
         enabled = {$plugin.tx_dp_http2.settings.enabled}
+        maxFiles = {$plugin.tx_dp_http2.settings.maxFiles}
+        modus = {$plugin.tx_dp_http2.settings.modus}
     }
 }
