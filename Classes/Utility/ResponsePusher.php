@@ -46,14 +46,14 @@ class ResponsePusher
      */
     protected function addPushHeader(string $uri, string $as, array $attributes)
     {
-        header(sprintf('Link: <%1$s>; rel=preload; as=%2$s%3$s', htmlspecialchars(PathUtility::getAbsoluteWebPath($uri)), $as, $this->getAttributes(($attributes))), false);
+        header(sprintf('Link: <%1$s>; rel=preload; as=%2$s%3$s', htmlspecialchars(PathUtility::getAbsoluteWebPath($uri)), $as, $this->getAttributes($attributes, $as)), false);
     }
 
     /**
      * @param $attributes
      * @return string
      */
-    protected function getAttributes($attributes)
+    protected function getAttributes($attributes, $as)
     {
         $string = [];
         foreach ($attributes as $key => $value) {
@@ -61,7 +61,10 @@ class ResponsePusher
         }
         if (!empty($string)) {
             return '; ' . implode('; ', $string);
-
+        }
+        // fix for fonts if not found
+        if ($as == 'font') {
+            return '; crossorigin';
         }
     }
 }

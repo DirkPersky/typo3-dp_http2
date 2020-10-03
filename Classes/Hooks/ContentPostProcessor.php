@@ -90,13 +90,13 @@ class ContentPostProcessor
             $modus = $this->getConfig('plugin.dp_http2.settings.modus');
             $maxFiles = $this->getConfig('plugin.dp_http2.settings.maxFiles');
             // get Preloads from DOM
-//            $preloads = ResourceParser::preloads($typoScriptFrontendController->content);
+            $preloads = ResourceParser::preloads($typoScriptFrontendController->content);
             // get Stylesheats from DOM
             $styles = ResourceParser::stylesheat($typoScriptFrontendController->content);
             // get JS from DOM
             $js = ResourceParser::javascript($typoScriptFrontendController->content);
             // dataset
-            $dataSet = array_merge($styles, $js);
+            $dataSet = array_merge($styles, $js, $preloads);
             // create Json temp File
             $jsonString = json_encode(['maxFiles' => (empty($maxFiles) ? null : (int)$maxFiles), 'modus' => $modus, 'dataset' => $dataSet]);
             // create backupfile
