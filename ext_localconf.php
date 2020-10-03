@@ -9,13 +9,12 @@
  * @license    MIT
  */
 
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3_MODE') or die();
 
 $boot = function () {
     // Register FE namespace
-    ExtensionUtility::configurePlugin(
+    TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'DirkPersky.' . 'dp_http2',
         'DpHttp2',
         []
@@ -30,6 +29,10 @@ $boot = function () {
 
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] =
         DirkPersky\DpHttp2\Hooks\ContentPostProcessor::class . '->output';
+
+    // the backend is clicked (contains an age check)
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] =
+        DirkPersky\DpHttp2\Hooks\CacheClear::class . '->clearCachePostProc';
 
 };
 
