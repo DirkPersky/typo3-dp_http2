@@ -14,9 +14,9 @@ If you use it together with Scriptmerger take care to install this plugin after 
 
 | Property                  | Description                                   | Options                                   | Default |
 | ------------------------- | --------------------------------------------- | ----------------------------------------- | -------:|
-| enabled                   | Enable the PlugIn handling                    | true|false                                | true |
-| maxFiles                  | Maximum Files that shoud pushed or preloaded  | empty|numeric                             |    |
-| modus                     | Switch betweend Optimisation modes            | http2push|preload                         | http2push |
+| enabled                   | Enable the PlugIn handling                    | true, false                                | true |
+| maxFiles                  | Maximum Files that shoud pushed or preloaded  | empty, numeric                             |    |
+| modus                     | Switch betweend Optimisation modes            | http2push, preload                         | http2push |
 
 ## Please give me feedback
 I would appreciate any kind of feedback or ideas for further developments to keep improving the extension for your needs.
