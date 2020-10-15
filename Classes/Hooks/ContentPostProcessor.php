@@ -17,7 +17,9 @@ use DirkPersky\DpHttp2\Utility\ResponsePusher;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use function file_exists;
 use function file_get_contents;
@@ -150,10 +152,15 @@ class ContentPostProcessor
     {
         // if not defined get get TypoScript
         if (!$this->typoScript) {
-            // get ConfigManager
-            $settings = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-            // Das komplette TypoScript holen
-            $this->typoScript = $settings->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+            try {
+                $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+                $configurationManager = $objectManager->get(ConfigurationManager::class);
+                // Das komplette TypoScript holen
+                $this->typoScript = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+            } catch (\Exception $ex) {
+                // classic way
+                $this->typoScript = $GLOBALS['TSFE']->tmpl->setup;
+            }
         }
         // value holder
         $value = $this->typoScript;
