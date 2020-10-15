@@ -121,14 +121,12 @@ class ContentPostProcessor
         // if dataset eixst go one
         if (!empty($dataSet)) {
             // preload Header
-            if ($modus == static::PRELOAD_MODE) {
-                // get Preload tags
-                $preloadContent = GeneralUtility::makeInstance(ResponsePreload::class)->preloadAll($dataSet, $maxFiles);
-                // add preload header tags
-                $typoScriptFrontendController->content = preg_replace(
-                    '/<\/title>/', '</title>' . $preloadContent, $typoScriptFrontendController->content, 1
-                );
-            }
+            // get Preload tags
+            $preloadContent = GeneralUtility::makeInstance(ResponsePreload::class)->preloadAll($dataSet, $maxFiles);
+            // add preload header tags
+            $typoScriptFrontendController->content = preg_replace(
+                '/<\/title>/', '</title>' . $preloadContent, $typoScriptFrontendController->content, 1
+            );
             // push header
             if ($modus == static::PUSH_MODE) GeneralUtility::makeInstance(ResponsePusher::class)->pushAll($dataSet, $maxFiles);
         }
