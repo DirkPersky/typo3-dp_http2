@@ -13,13 +13,6 @@
 defined('TYPO3_MODE') or die();
 
 $boot = function () {
-    // Register FE namespace
-    TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'DirkPersky.' . 'dp_http2',
-        'DpHttp2',
-        []
-    );
-
     // post processing hook to clear any existing cache files if the button in
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] =
         DirkPersky\DpHttp2\Hooks\ContentPostProcessor::class . '->accumulateResources';
@@ -33,7 +26,6 @@ $boot = function () {
     // the backend is clicked (contains an age check)
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] =
         DirkPersky\DpHttp2\Hooks\CacheClear::class . '->clearCachePostProc';
-
 };
 
 $boot();

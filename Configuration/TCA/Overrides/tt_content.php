@@ -8,14 +8,4 @@
  * @author     Dirk Persky <dirk.persky@gmail.com>
  * @license    MIT
  */
-
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-
 defined('TYPO3_MODE') || die();
-
-// Register Plugin and name SPaces
-ExtensionUtility::registerPlugin(
-    'DirkPersky.' . 'dp_http2',
-    'HTTP2',
-    'HTTP2'
-);
