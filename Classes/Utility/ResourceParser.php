@@ -33,7 +33,7 @@ class ResourceParser
      */
     public static function stylesheat($content)
     {
-       return static::parse('/<link[\/\s\w\-="]*\shref="(.*?\.css[^"]*)"(.*?)>/i', $content, 'style');
+       return static::parse('/<link[\/\s\w\-="]*\shref="([^"]*?\.css[^"]*)"(.*?)>/i', $content, 'style');
     }
 
     /**
@@ -42,7 +42,7 @@ class ResourceParser
      */
     public static function javascript($content)
     {
-        return static::parse('/<script[\/\s\w\-="]*\ssrc="(.*?\.js[^"]*)"(.*?)>/i', $content, 'script');
+        return static::parse('/<script[\/\s\w\-="]*\ssrc="([^"]*?\.js[^"]*)"(.*?)>/i', $content, 'script');
     }
 
     /**
