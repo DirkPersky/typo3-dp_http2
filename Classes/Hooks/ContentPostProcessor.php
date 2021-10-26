@@ -14,12 +14,13 @@ namespace DirkPersky\DpHttp2\Hooks;
 use DirkPersky\DpHttp2\Utility\ResourceParser;
 use DirkPersky\DpHttp2\Utility\ResponsePreload;
 use DirkPersky\DpHttp2\Utility\ResponsePusher;
+use Exception;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use function file_exists;
 use function file_get_contents;
@@ -56,21 +57,6 @@ class ContentPostProcessor
         $this->tempDir = $pathSite . 'typo3temp/dp_http2/';
         // create dir if not exists
         if (!is_dir($this->tempDir)) GeneralUtility::mkdir($this->tempDir);
-    }
-
-    /**
-     * @param array $params
-     */
-    public function accumulateResources(array $params)
-    {
-    }
-
-    /**
-     * @param array $params
-     * @param TypoScriptFrontendController $typoScriptFrontendController
-     */
-    public function all(array $params, TypoScriptFrontendController $typoScriptFrontendController)
-    {
     }
 
     /**
@@ -157,7 +143,7 @@ class ContentPostProcessor
                 $configurationManager = $objectManager->get(ConfigurationManager::class);
                 // Das komplette TypoScript holen
                 $this->typoScript = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 // classic way
                 $this->typoScript = $GLOBALS['TSFE']->tmpl->setup;
             }
