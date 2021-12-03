@@ -42,7 +42,7 @@ class CacheClear
      */
     public function clearCachePostProc(&$params)
     {
-        if ($params['cacheCmd'] !== 'all') {
+        if (isset($params['cacheCmd']) && $params['cacheCmd'] !== 'all') {
             return;
         }
         // abort if no dir exists
