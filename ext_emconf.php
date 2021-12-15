@@ -19,10 +19,10 @@ $EM_CONF[$_EXTKEY] = [
     'clearcacheonload' => false,
     'author' => 'Dirk Persky',
     'author_email' => 'infoy@dp-wired.de',
-    'version' => '2.0.3',
+    'version' => '3.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.0-11.5.99'
+            'typo3' => '11.5.0-11.5.99'
         ],
         'conflicts' => [],
         'suggests' => [

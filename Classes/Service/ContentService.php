@@ -9,35 +9,37 @@
  * @license    MIT
  */
 
-namespace DirkPersky\DpHttp2\Hooks;
+namespace DirkPersky\DpHttp2\Service;
 
 use DirkPersky\DpHttp2\Utility\ResourceParser;
 use DirkPersky\DpHttp2\Utility\ResponsePreload;
 use DirkPersky\DpHttp2\Utility\ResponsePusher;
+use Exception;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use function file_exists;
 use function file_get_contents;
 use function is_array;
 use function is_dir;
 
 /**
- * Class ContentPostProcessor
- * @package DirkPersky\DpHttp2\Hooks
+ * Class ContentService
+ * @package DirkPersky\DpHttp2\Service
  */
-class ContentPostProcessor
+class ContentService implements SingletonInterface
 {
     const PUSH_MODE = 'http2push';
     const PRELOAD_MODE = 'preload';
+
     /**
      * @var ConfigurationManager
      */
     protected $typoScript;
+
     /**
      * dir for json files
      *
@@ -59,33 +61,20 @@ class ContentPostProcessor
     }
 
     /**
-     * @param array $params
+     * @param string $html
+     * @param array $config
+     * @param mixed $request
+     * @return string
      */
-    public function accumulateResources(array $params)
-    {
-    }
-
-    /**
-     * @param array $params
-     * @param TypoScriptFrontendController $typoScriptFrontendController
-     */
-    public function all(array $params, TypoScriptFrontendController $typoScriptFrontendController)
-    {
-    }
-
-    /**
-     * @param array $params
-     * @param TypoScriptFrontendController $typoScriptFrontendController
-     */
-    public function output(array $params, TypoScriptFrontendController $typoScriptFrontendController)
+    public function parse($html, $request)
     {
         // skip the processing if the current request contains INT scripts and has therefore uncached
-        if ($GLOBALS['TSFE']->isINTincScript()) return;
+        if (!empty($request->getHeader('x-requested-with')) || $GLOBALS['TSFE']->isINTincScript()) return $html;
         // site config
-        if (method_exists($typoScriptFrontendController, 'getSite')) {
-            $siteKey = $typoScriptFrontendController->getSite()->getIdentifier();
+        if (method_exists($GLOBALS['TSFE'], 'getSite')) {
+            $siteKey = $GLOBALS['TSFE']->getSite()->getIdentifier();
         } else {
-            $siteKey = $GLOBALS['TYPO3_REQUEST']->getAttribute('site')->getIdentifier();
+            $siteKey = $request->getAttribute('site')->getIdentifier();
         }
         // paceholder values
         $maxFiles = null;
@@ -96,11 +85,11 @@ class ContentPostProcessor
             $modus = $this->getConfig('plugin.dp_http2.settings.modus');
             $maxFiles = $this->getConfig('plugin.dp_http2.settings.maxFiles');
             // get Preloads from DOM
-            $preloads = ResourceParser::preloads($typoScriptFrontendController->content);
+            $preloads = ResourceParser::preloads($html);
             // get Stylesheats from DOM
-            $styles = ResourceParser::stylesheat($typoScriptFrontendController->content);
+            $styles = ResourceParser::stylesheat($html);
             // get JS from DOM
-            $js = ResourceParser::javascript($typoScriptFrontendController->content);
+            $js = ResourceParser::javascript($html);
             // dataset
             $dataSet = array_merge($styles, $js, $preloads);
             // create Json temp File
@@ -121,24 +110,26 @@ class ContentPostProcessor
         // if dataset eixst go one
         if (!empty($dataSet)) {
             // preload Header
-            if (in_array($modus,[static::PRELOAD_MODE, static::PUSH_MODE])) {
+            if (in_array($modus, [static::PRELOAD_MODE, static::PUSH_MODE])) {
                 // get Preload tags
                 $preloadContent = GeneralUtility::makeInstance(ResponsePreload::class)->preloadAll($dataSet, $maxFiles);
                 // add preload header tags
-                $typoScriptFrontendController->content = preg_replace(
-                    '/<\/title>/', '</title>' . $preloadContent, $typoScriptFrontendController->content, 1
+                $html = preg_replace(
+                    '/<\/title>/', '</title>' . $preloadContent, $html, 1
                 );
             }
             // push header
             if (in_array($modus, [static::PUSH_MODE])) GeneralUtility::makeInstance(ResponsePusher::class)->pushAll($dataSet, $maxFiles);
         }
-
+        // return new html
+        return $html;
     }
+
 
     /**
      * @return bool
      */
-    protected function isEnabled()
+    public function isEnabled()
     {
         // return is active
         return ($this->getConfig('plugin.dp_http2.settings.enabled') == 'true');
@@ -157,7 +148,7 @@ class ContentPostProcessor
                 $configurationManager = $objectManager->get(ConfigurationManager::class);
                 // Das komplette TypoScript holen
                 $this->typoScript = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 // classic way
                 $this->typoScript = $GLOBALS['TSFE']->tmpl->setup;
             }
