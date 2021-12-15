@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /*
- * Copyright (c) 2021.
+ * Copyright (c) 2020.
  *
  * @category   TYPO3
  *
@@ -22,10 +22,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
- * Class CleanHtmlMiddleware
+ * Class HTTPPushMiddleware
  * @package DirkPersky\DpHttp2\Middleware
  */
-class CleanHtmlMiddleware implements MiddlewareInterface
+class HTTPPushMiddleware implements MiddlewareInterface
 {
     /**
      * @var ContentService
@@ -53,7 +53,6 @@ class CleanHtmlMiddleware implements MiddlewareInterface
             // process to Service and get preload HTML
             $processedHtml = $this->contentService->parse(
                 $response->getBody()->__toString(),
-                $GLOBALS['TSFE']->config['config']['dp_http2.'],
                 $request
             );
             // Replace old body with $processedHtml
